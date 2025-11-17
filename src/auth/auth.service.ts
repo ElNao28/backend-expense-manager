@@ -52,7 +52,7 @@ export class AuthService {
   }
 
   /**
-   * 
+   *
    * @param id - Id of user that consulted
    * @returns returns one user if exists
    */
@@ -65,5 +65,16 @@ export class AuthService {
     return foundUser;
   }
 
-  
+  /**
+   * 
+   * @param id - id of user deleted
+   * @returns returns empy data, only return status action
+   */
+  public async deleteUserById(id: string) {
+    try {
+      return await this.userRepository.softDelete({ id });
+    } catch (error) {
+      HandlerDataBaseErrors(error);
+    }
+  }
 }

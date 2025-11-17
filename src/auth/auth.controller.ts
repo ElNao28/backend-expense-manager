@@ -29,4 +29,9 @@ export class AuthController {
   public getUserById(@Param('id', ParseUUIDPipe) id: string) {
     return this.authService.getUserById(id);
   }
+
+  @Delete('users/:id')
+  public deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
+    return this.authService.deleteUserById(id);
+  }
 }
