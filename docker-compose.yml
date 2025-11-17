@@ -2,7 +2,7 @@ version: '1.0.0'
 
 services:
   postgresDB:
-    image: postgres:14.20-alpine
+    image: postgres:14.3
     container_name: postgresDB
     restart: always
     ports:
@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     volumes:
-      - ./postgres_data:/var/lib/postgresql
+      - ./postgres_data:/var/lib/postgresql/data
 
   pgAdmin:
     image: elestio/pgadmin:REL-9_8
