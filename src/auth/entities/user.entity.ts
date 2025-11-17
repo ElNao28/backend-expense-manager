@@ -22,19 +22,21 @@ export class User {
   @Column({
     type: 'text',
     nullable: true,
-    name:'second_lastname'
+    name: 'second_lastname',
   })
   secondLastname?: string;
 
   @Column({
     type: 'text',
     nullable: false,
+    unique: true,
   })
   email: string;
 
   @Column({
     type: 'int',
     nullable: false,
+    unique: true,
   })
   phone: string;
 
@@ -43,5 +45,4 @@ export class User {
     nullable: false,
   })
   password: string;
-
 }
