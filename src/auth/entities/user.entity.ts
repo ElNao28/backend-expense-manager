@@ -11,7 +11,7 @@ export class User {
     type: 'text',
     nullable: false,
   })
-  firtname: string;
+  firtsname: string;
 
   @Column({
     type: 'text',
@@ -21,9 +21,10 @@ export class User {
 
   @Column({
     type: 'text',
-    nullable: false,
+    nullable: true,
+    name:'second_lastname'
   })
-  secondLastName: string;
+  secondLastname?: string;
 
   @Column({
     type: 'text',
