@@ -53,7 +53,7 @@ export class AuthService {
 
   /**
    *
-   * @param id - Id of user that consulted
+   * @param id - User ID of the user who made the query
    * @returns returns one user if exists
    */
   public async getUserById(id: string) {
@@ -67,8 +67,8 @@ export class AuthService {
 
   /**
    *
-   * @param id - id of user deleted
-   * @returns returns empy data, only return status action
+   * @param id - id of the user deleted
+   * @returns returns empy data
    */
   public async deleteUserById(id: string) {
     const deletedUser = await this.userRepository.softDelete({ id });
@@ -81,7 +81,7 @@ export class AuthService {
 
   /**
    *
-   * @param id - id of user to update data
+   * @param id - id of the user to update data
    * @param updateUserDto - data with information to update
    * @returns returns data of user updated
    */
