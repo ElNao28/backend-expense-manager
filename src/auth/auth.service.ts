@@ -1,7 +1,9 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,12 +11,16 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { HandlerDataBaseErrors } from 'src/common/helpers/handler-database-errors.helper';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginDto } from './dto/login.dto';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   /**
@@ -94,5 +100,42 @@ export class AuthService {
     } catch (error) {
       HandlerDataBaseErrors(error);
     }
+  }
+
+  public async loginUser(loginDto: LoginDto) {
+    const { email, password } = loginDto;
+    const foundUser = await this.userRepository.findOne({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+        firtsname: true,
+        lastname: true,
+        secondLastname: true,
+        email: true,
+        phone: true,
+        password: true,
+        isActive: true,
+      },
+    });
+
+    if (!foundUser)
+      throw new NotFoundException(`User with email: ${email} not found`);
+
+    if (!foundUser.isActive)
+      throw new ForbiddenException(`User inactive, Please contact with admin`);
+
+    if (!bcrypt.compareSync(password, foundUser.password))
+      throw new UnauthorizedException(`Password incorrect`);
+
+    const { password: _, ...payload } = foundUser;
+
+    const token = this.jwtService.sign(payload);
+
+    return {
+      token,
+      message: 'Login success',
+    };
   }
 }
