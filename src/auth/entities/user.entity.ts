@@ -1,9 +1,12 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   DeleteDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
 @Entity({
   name: 'users',
@@ -60,4 +63,23 @@ export class User {
 
   @DeleteDateColumn()
   deleteAt?: Date;
+
+  @BeforeInsert()
+  hashPasswordBfInsert() {
+    const hashPassword = bcrypt.hashSync(
+      this.password,
+      process.env.ROUNDS_HASH ? +process.env.ROUNDS_HASH : 8,
+    );
+    this.password = hashPassword;
+  }
+
+  @BeforeUpdate()
+  hashPasswordBfUpdate() {
+    if (!this.password) return;
+    const hashPassword = bcrypt.hashSync(
+      this.password,
+      process.env.ROUNDS_HASH ? +process.env.ROUNDS_HASH : 8,
+    );
+    this.password = hashPassword;
+  }
 }

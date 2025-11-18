@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,5 +34,14 @@ export class AuthController {
   @Delete('users/:id')
   public deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
     return this.authService.deleteUserById(id);
+  }
+
+  @Patch('users/update/:id')
+  public updateUserById(
+    @Param('id', ParseUUIDPipe)
+    id:string,
+    @Body() updateUserDto:UpdateUserDto
+  ){
+    return this.authService.updateUserById(id, updateUserDto);
   }
 }

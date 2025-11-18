@@ -7,8 +7,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 import { HandlerDataBaseErrors } from 'src/common/helpers/handler-database-errors.helper';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,17 +24,7 @@ export class AuthService {
    */
   public async createNewUser(createUserDto: CreateUserDto) {
     try {
-      const { password, ...newUser } = createUserDto;
-      const hashPassword = bcrypt.hashSync(
-        password,
-        process.env.ROUNDS_HASH ? +process.env.ROUNDS_HASH : 8,
-      );
-
-      const user = this.userRepository.create({
-        ...newUser,
-        password: hashPassword,
-      });
-
+      const user = this.userRepository.create(createUserDto);
       const saveUser = await this.userRepository.save(user);
       return saveUser;
     } catch (error) {
@@ -75,14 +65,34 @@ export class AuthService {
    * @returns returns empy data, only return status action
    */
   public async deleteUserById(id: string) {
-
     const deletedUser = await this.userRepository.softDelete({ id });
 
     if (deletedUser.affected === 0)
-      throw new ConflictException(
-        `Can't delete user with: ${id}`,
-      );
+      throw new ConflictException(`Can't delete user with: ${id}`);
 
-      return deletedUser;
+    return deletedUser;
+  }
+
+  /**
+   *
+   * @param id - id of user to update data
+   * @param updateUserDto - data with information to update
+   * @returns returns data of user updated
+   */
+  public async updateUserById(id: string, updateUserDto: UpdateUserDto) {
+    const updateUser = await this.userRepository.preload({
+      id,
+      ...updateUserDto,
+    });
+
+    if (!updateUser)
+      throw new NotFoundException(`User with id: ${id} not found`);
+
+    try {
+      const saveUser = await this.userRepository.save(updateUser);
+      return saveUser;
+    } catch (error) {
+      HandlerDataBaseErrors(error);
+    }
   }
 }
