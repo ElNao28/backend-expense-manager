@@ -16,6 +16,7 @@ import { LoginDto } from './dto/login.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UserRolesGuard } from './guards/user-roles.guard';
 import { CreateRoleDto } from './dto/create-role.dto';
+import { Authorize, ValidRoles } from './decorators/authorize.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -26,6 +27,7 @@ export class AuthController {
     return this.authService.createNewUser(createUserDto);
   }
 
+  @Authorize(ValidRoles.Admin)
   @UseGuards(AuthGuard(), UserRolesGuard)
   @Get('users')
   public getAllUsers() {
