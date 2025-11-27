@@ -70,7 +70,9 @@ export class User {
   })
   deleteAt?: Date;
 
-  @ManyToMany(() => Roles)
+  @ManyToMany(() => Roles, {
+    eager: true,
+  })
   @JoinTable({
     name: 'users_roles',
   })

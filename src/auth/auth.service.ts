@@ -61,9 +61,7 @@ export class AuthService {
    */
   public async getAllUsers() {
     try {
-      const users = await this.userRepository.find({
-        relations: ['roles'],
-      });
+      const users = await this.userRepository.find();
       return users;
     } catch (error) {
       HandlerDataBaseErrors(error);

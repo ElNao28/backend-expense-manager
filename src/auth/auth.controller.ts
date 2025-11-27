@@ -7,16 +7,14 @@ import {
   Param,
   Delete,
   ParseUUIDPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { UserRolesGuard } from './guards/user-roles.guard';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { Authorize, ValidRoles } from './decorators/authorize.decorator';
+import { ValidRoles } from './decorators/authorize.decorator';
+import { Auth } from './decorators/auth.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -27,8 +25,7 @@ export class AuthController {
     return this.authService.createNewUser(createUserDto);
   }
 
-  @Authorize(ValidRoles.Admin)
-  @UseGuards(AuthGuard(), UserRolesGuard)
+  @Auth(ValidRoles.User)
   @Get('users')
   public getAllUsers() {
     return this.authService.getAllUsers();

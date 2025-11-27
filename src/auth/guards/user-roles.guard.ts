@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { User } from 'src/auth/entities/user.entity';
@@ -10,13 +15,22 @@ export class UserRolesGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const user = context.switchToHttp().getRequest().user as User;
+    const { roles } = context.switchToHttp().getRequest().user as User;
 
-    const roles = this.reflector.get('roles', context.getHandler());
+    const validRoles = this.reflector.get(
+      'roles',
+      context.getHandler(),
+    ) as string[];
 
-    console.log(context.switchToHttp().getRequest());
-    console.log(roles);
-    // console.log(user);
-    return true;
+    if (!validRoles) return true;
+    if (validRoles.length === 0) return true;
+
+    for (const { name } of roles) {
+      if (validRoles.includes(name)) return true;
+    }
+
+    throw new UnauthorizedException(
+      `The user does not have sufficient permissions`,
+    );
   }
 }
