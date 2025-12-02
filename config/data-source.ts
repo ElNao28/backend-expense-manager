@@ -1,0 +1,17 @@
+import { config } from 'dotenv';
+import { DataSource } from 'typeorm';
+
+config({
+  path: '.env',
+});
+
+export const db1DataSource = new DataSource({
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT ? +process.env.DB_PORT : 5432,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  entities: [process.cwd() + '/**/*.entity{.ts,.js}'],
+  migrations: [process.cwd() + './migrations/*{.js,.ts}'],
+});

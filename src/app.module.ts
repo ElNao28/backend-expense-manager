@@ -22,7 +22,7 @@ import { EmailModule } from './email/email.module';
       password: process.env.DB_PASSWORD ?? 'myPasswordExample',
       database: process.env.DB_NAME ?? 'nameDataBase',
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     CommonModule,
