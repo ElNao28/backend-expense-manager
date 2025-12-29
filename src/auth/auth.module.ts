@@ -31,6 +31,6 @@ import { Roles } from './entities/roles.entity';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
-  exports: [TypeOrmModule, PassportModule, JwtStrategy],
+  exports: [TypeOrmModule, PassportModule, JwtStrategy, AuthService],
 })
 export class AuthModule {}
