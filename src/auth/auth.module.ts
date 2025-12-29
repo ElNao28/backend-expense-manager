@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { Roles } from './entities/roles.entity';
+import { AccountsModule } from 'src/accounts/accounts.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { Roles } from './entities/roles.entity';
         };
       },
     }),
+    AccountsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

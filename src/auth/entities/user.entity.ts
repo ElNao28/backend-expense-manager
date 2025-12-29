@@ -6,10 +6,12 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Roles } from './roles.entity';
+import { Account } from '../../accounts/entities/account.entity';
 
 @Entity({
   name: 'users',
@@ -80,6 +82,9 @@ export class User {
     name: 'users_roles',
   })
   roles: Roles[];
+
+  @OneToMany(() => Account, (account) => account.userId)
+  accounts: Account[];
 
   @BeforeInsert()
   hashPasswordBfInsert() {

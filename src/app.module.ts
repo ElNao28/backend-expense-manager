@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { UploadFilesModule } from './upload-files/upload-files.module';
 import { EmailModule } from './email/email.module';
+import { AccountsModule } from './accounts/accounts.module';
 
 @Module({
   imports: [
@@ -21,13 +22,14 @@ import { EmailModule } from './email/email.module';
       username: process.env.DB_USER ?? 'postgres',
       password: process.env.DB_PASSWORD ?? 'myPasswordExample',
       database: process.env.DB_NAME ?? 'nameDataBase',
-      autoLoadEntities: true,
+      autoLoadEntities: false,
       synchronize: false,
     }),
     AuthModule,
     CommonModule,
     UploadFilesModule,
     EmailModule,
+    AccountsModule,
   ],
   controllers: [],
   providers: [],
