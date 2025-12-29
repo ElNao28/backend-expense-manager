@@ -13,7 +13,7 @@ import { Auth } from 'src/auth/decorators/auth.decorator';
 import { diskStorage } from 'multer';
 import { FileNamer } from './helpers/fileNamer.helper';
 import type { Response } from 'express';
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileUploadDto } from './file-upload.dto';
 
 @Controller('upload-files')
@@ -35,7 +35,6 @@ export class UploadFilesController {
       }),
     }),
   )
-  @ApiBearerAuth()
   public uploadImages(@UploadedFile() file: Express.Multer.File) {
     console.log(file);
   }

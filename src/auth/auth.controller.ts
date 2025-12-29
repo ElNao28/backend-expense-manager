@@ -15,7 +15,7 @@ import { LoginDto } from './dto/login.dto';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { Auth } from './decorators/auth.decorator';
 import { ValidRoles } from './decorators/authorize.decorator';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('auth')
 export class AuthController {
@@ -36,7 +36,6 @@ export class AuthController {
     description: 'List of all users',
     type: [CreateUserDto],
   })
-  @ApiBearerAuth()
   @Auth()
   @Get('users')
   public getAllUsers() {
@@ -48,7 +47,6 @@ export class AuthController {
     description: 'User details',
     type: CreateUserDto,
   })
-  @ApiBearerAuth()
   @Auth()
   @Get('users/:id')
   public getUserById(@Param('id', ParseUUIDPipe) id: string) {
@@ -59,7 +57,6 @@ export class AuthController {
     status: 200,
     description: 'User deleted successfully',
   })
-  @ApiBearerAuth()
   @Auth()
   @Delete('users/:id')
   public deleteUserById(@Param('id', ParseUUIDPipe) id: string) {
@@ -72,7 +69,6 @@ export class AuthController {
     type: CreateUserDto,
   })
   @Auth()
-  @ApiBearerAuth()
   @Patch('users/update/:id')
   public updateUserById(
     @Param('id', ParseUUIDPipe)
@@ -88,7 +84,6 @@ export class AuthController {
     type: CreateRoleDto,
   })
   @Auth(ValidRoles.Admin)
-  @ApiBearerAuth()
   @Post('role')
   public createRole(@Body() createRoleDto: CreateRoleDto) {
     return this.authService.createRole(createRoleDto);
